@@ -342,7 +342,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#s12">相關連結</a>
                         </li>
-                        
+
                     </ul>
                     <!-- 設登入與註冊按鈕 -->
                     <div id="user_info">
@@ -1122,13 +1122,32 @@
 
 
             //******************************************
+            // $.ajax({
+            //     type: "GET",
+            //     url: "http://upupcoffee.infinityfreeapp.com/product_R_api.php",
+            //     dataType: "json",
+            //     success: showdata,
+            //     error: function () {
+            //         alert("error-product_R_api.php");
+            //     }
+            // });
+
             $.ajax({
                 type: "GET",
-                url: "http://upupcoffee.infinityfreeapp.com/product_R_api.php",
+                url: "https://cors-anywhere.herokuapp.com/http://upupcoffee.infinityfreeapp.com/product_R_api.php",
                 dataType: "json",
-                success: showdata,
-                error: function () {
-                    alert("error-product_R_api.php");
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    // 或者使用 Origin
+                    // "Origin": "http://yourgithubpages.com"
+                },
+                success: function (data) {
+                    console.log(data);
+                    // 處理成功返回的數據
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX錯誤：", textStatus, errorThrown);
+                    alert("讀取產品資料時發生錯誤，請稍後再試。");
                 }
             });
 
@@ -1347,7 +1366,7 @@
             resizeTimer = setTimeout(loadProducts, 250);
         });
 
-        
+
 
         function showdata_register(data) {
             console.log(data);

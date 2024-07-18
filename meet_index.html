@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>預約建檔</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/myall.css">
+    <link rel="stylesheet" href="./css/all.min.css">
+    <style>
+        .admin-panel-icon {
+            position: fixed;
+            right: 20px;
+            top: 60%;
+            transform: translateY(-50%);
+            background-color: var(--mycolor04);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+
+        .admin-panel-icon i {
+            font-size: 24px;
+        }
+
+        .admin-panel {
+            position: fixed;
+            top: 60%;
+            right: -300px;
+            width: 300px;
+            background: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-50%);
+            transition: right 0.3s;
+            z-index: 999;
+        }
+
+        .admin-panel.show {
+            right: 0;
+        }
+
+        #admin-options {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #admin-options li {
+            margin-bottom: 15px;
+        }
+
+        #admin-options a {
+            display: block;
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        #admin-options a:hover {
+            background-color: var(--mycolor04);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translateY(-50%) scale(1);
+            }
+
+            50% {
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            100% {
+                transform: translateY(-50%) scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">預約管理控制</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="./meet_index.html">新增預約</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./meet_table.html">預約列表</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./index.html">回首頁</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled">Disabled</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <button class="btn btn-secondary d-none" id="s02_logout_btn">登出</button>
+                    <span class="text-danger h1" id="s02_user_text"></span>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div id="admin-panel-icon" class="admin-panel-icon">
+        <i class="fas fa-cogs"></i>
+        <span id="admin-panel-indicator"></span>
+    </div>
+
+    <div id="admin-panel" class="admin-panel">
+        <h5>管理面板</h5>
+        <ul id="admin-options">
+            <li><a href="./product_table.html" target="_blank">產品管理</a></li>
+            <li><a href="./meet_table.html" target="_blank">預約管理</a></li>
+            <li><a href="./product_order_table.html" target="_blank">訂單管理</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center pt-5">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body shadow-lg">
+                        <div class="mb-3">
+                            <label for="cname" class="form-label">預約姓名</label>
+                            <input type="text" name="cname" id="cname" class="form-control" placeholder="字數1~40">
+                            <div class="valid-feedback">符合規定</div>
+                            <div class="invalid-feedback">不符合規定</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="" class="form-label">預約電話</label>
+                            <input type="tel" name="tel" id="tel" class="form-control" placeholder="留手機號碼，例如：0911000123"
+                                pattern="[0-9]{10}">
+                            <div class="valid-feedback">符合規定</div>
+                            <div class="invalid-feedback">不符合規定</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="" class="form-label">Email</label>
+                            <input type="email" name="cemail" id="cemail" class="form-control">
+                            <div class="valid-feedback">符合規定</div>
+                            <div class="invalid-feedback">不符合規定</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="" class="form-label">人數</label>
+                            <input type="number" name="cpeople" id="cpeople" min="1" max="10" value="2"
+                                class="form-control">
+                            <div class="valid-feedback">人數符合規定</div>
+                            <div class="invalid-feedback">人數不符合規定</div>
+                        </div>
+                        <div class="mb-1 form-check form-check-inline">
+                            <input type="radio" name="cat" id="cat_with" class="form-check-input" value="不帶貓" checked>
+                            <label for="cat_with" class="form-check-label">不帶貓</label>
+                        </div>
+                        <div class="mb-1 form-check form-check-inline">
+                            <input type="radio" name="cat" id="cat_no" class="form-check-input" value="帶貓">
+                            <label for="cat_no" class="form-check-label">帶貓</label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="datepicker" class="form-label">預約日期（最早預約日：兩天後）</label>
+                            <input type="text" class="form-control" id="datepicker" name="datepicker" readonly>
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-outline-danger" id="ccancel_btn">取消</button>
+                            <button class="btn btn-success" id="cok_btn">確認</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 只能預約當日起兩天後的日期
+            var today = new Date();
+            var startDate = new Date(today.setDate(today.getDate() + 2));
+
+            $('#datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true,
+                startDate: startDate
+            });
+        });
+
+
+
+        let flag_cname = false;
+        let flag_tel = false;
+        let flag_cemail = false;
+        let flag_cpeople = false;
+        let flag_datepicker = false;
+
+        $(function () {
+            $("#cname").bind("input propertchange", function () {
+                if ($(this).val().length > 0 && $(this).val().length < 41) {
+                    $(this).removeClass("is-invalid");
+                    $(this).addClass("is-valid");
+                    flag_cname = true;
+                } else {
+                    $(this).removeClass("is-valid");
+                    $(this).addClass("is-invalid");
+                    flag_cname = false;
+                }
+            });
+            //電話號碼要09開頭，而且總共10位數
+            $("#tel").bind("input propertychange", function () {
+                let phoneNumber = $(this).val();
+                let phonePattern = /^09\d{8}$/;
+
+                // / 和 / 是正規表示式的分隔符，表示正規表示式的開始和結束。
+                // ^ 表示字符串的開始。
+                //09 表示電話號碼必須以09開頭。
+                //\d{8} 表示後續必須有8個數字。
+                //$ 表示字符串的結尾。
+
+                if (phonePattern.test(phoneNumber)) {
+                    $(this).removeClass("is-invalid");
+                    $(this).addClass("is-valid");
+                    flag_tel = true;
+                } else {
+                    $(this).removeClass("is-valid");
+                    $(this).addClass("is-invalid");
+                    flag_tel = false;
+                }
+            });
+            $("#cemail").bind("input propertychange", function () {
+                let cemail = $(this).val();
+                let cemailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                if (cemailPattern.test(cemail)) {
+                    $(this).removeClass("is-invalid");
+                    $(this).addClass("is-valid");
+                    flag_cemail = true;
+                } else {
+                    $(this).removeClass("is-valid");
+                    $(this).addClass("is-invalid");
+                    flag_cemail = false;
+                }
+            });
+            $("#cpeople").bind("input propertchange", function () {
+                if ($(this).val() > 0 && $(this).val() < 11) {
+                    $(this).removeClass("is-invalid");
+                    $(this).addClass("is-valid");
+                    flag_cpeople = true;
+                } else {
+                    $(this).removeClass("is-valid");
+                    $(this).addClass("is-invalid");
+                    flag_cpeople = false;
+                }
+            });
+            $("#datepicker").on("change", function () {
+                let selectedDate = $(this).datepicker("getDate");
+                let validDate = new Date();
+                validDate.setDate(validDate.getDate() + 2);
+
+                if (selectedDate >= validDate) {
+                    flag_datepicker = true;
+                } else {
+                    flag_datepicker = false;
+                }
+            });
+
+        });
+
+        $("#cok_btn").click(function () {
+            if (flag_cname && flag_tel && flag_cemail && flag_cpeople && flag_datepicker) {
+                console.log($("#cname").val());
+                console.log($("#tel").val());
+                console.log($("#cemail").val());
+                console.log($("#cpeople").val());
+                console.log($("input[name='cat']:checked").val());
+                console.log($("#datepicker").val());
+
+                //轉換成json格式
+                var dataJSON = {}; //物件
+                // {"cname":"Pam", "tel":"0922409755", "cemail":"a891692005@hotmail.com", "cpeople":"5", "cat":"無帶貓", "datepicker": "2024-07-19"}
+                dataJSON["cname"] = $("#cname").val();
+                dataJSON["tel"] = $("#tel").val();
+                dataJSON["cemail"] = $("#cemail").val();
+                dataJSON["cpeople"] = $("#cpeople").val();
+                dataJSON["cat"] = $("input[name='cat']:checked").val();
+                dataJSON["datepicker"] = $("#datepicker").val();
+
+                console.log(JSON.stringify(dataJSON));
+
+                $("#cname").val('');
+                $("#tel").val('');
+                $("#cemail").val('');
+                $("input[name='cat']").prop('checked', false);
+                $("#cat_with").prop('checked', true);
+                $("#cpeople").val('2');
+                $("#datepicker").val('');
+
+                flag_cname = false;
+                flag_tel = false;
+                flag_cemail = false;
+                flag_cpeople = false;
+                flag_datepicker = false;
+
+                // 清除驗證狀態
+                $("#cname").removeClass("is-valid is-invalid");
+                $("#tel").removeClass("is-valid is-invalid");
+                $("#cemail").removeClass("is-valid is-invalid");
+                $("#cpeople").removeClass("is-valid is-invalid");
+
+                //傳遞至後端
+                $.ajax({
+                    type: "POST",
+                    url: "http://upupcoffee.infinityfreeapp.com/http://upupcoffee.infinityfreeapp.com/meet_C_api.php",
+                    data: JSON.stringify(dataJSON),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: showdata_t_c,
+                    error: function () {
+                        alert("error - meet_C_api.php");
+                    }
+                });
+
+            } else {
+                alert("欄位錯誤，請修正！");
+            }
+        });
+
+        function showdata_t_c(data) {
+            console.log(data);
+            if (data.state) {
+                alert(data.message);
+                location.href = "meet_index.html";
+            } else {
+                alert(data.message);
+            }
+        }
+
+
+
+        $("#ccancel_btn").click(function () {
+            $("#cname").val('');
+            $("#tel").val('');
+            $("#cemail").val('');
+            $("input[name='cat']").prop('checked', false);
+            $("#cat_with").prop('checked', true);
+            $("#cpeople").val('2');
+            $("#datepicker").val('');
+
+            flag_cname = false;
+            flag_tel = false;
+            flag_cemail = false;
+            flag_cpeople = false;
+            flag_datepicker = false;
+
+            // 清除驗證狀態
+            $("#cname").removeClass("is-valid is-invalid");
+            $("#tel").removeClass("is-valid is-invalid");
+            $("#cemail").removeClass("is-valid is-invalid");
+            $("#cpeople").removeClass("is-valid is-invalid");
+        });
+
+        $(document).ready(function () {
+            $("#admin-panel-icon").on("click", function () {
+                $("#admin-panel").toggleClass("show");
+            });
+
+            $("#admin-options a").on("click", function (e) {
+                e.preventDefault();
+                var url = $(this).attr("href");
+                window.open(url, '_self');
+            });
+
+            // 點擊面板外的區域時關閉面板
+            $(document).on("click", function (event) {
+                if (!$(event.target).closest("#admin-panel").length &&
+                    !$(event.target).closest("#admin-panel-icon").length) {
+                    $("#admin-panel").removeClass("show");
+                }
+            });
+        });
+
+        $(function () {
+            //檢查cookie 是否已存在uid 並確認是否合法
+            if (getCookie("UID01") != "" && getCookie("UID02") != "" && getCookie("UID03") != "") {
+                //uid傳至後端檢查是否合法
+                //轉換成json格式
+                var dataJSON = {}; //物件                        
+                dataJSON["uid01"] = getCookie("UID01");
+                dataJSON["uid02"] = getCookie("UID02");
+                dataJSON["uid03"] = getCookie("UID03");
+
+                console.log(JSON.stringify(dataJSON));
+
+                //傳遞至後端api
+                $.ajax({
+                    type: "POST",
+                    url: "http://upupcoffee.infinityfreeapp.com/member_check_uid-api.php",
+                    data: JSON.stringify(dataJSON),
+                    contentType: "application/json;charset=utf-8",
+                    dataType: "json",
+                    success: showdata_check_uid,
+                    error: function () {
+                        alert("error-member_check_uid-api.php");
+                    }
+                });
+            } else {
+                alert("必須先登入會員!");
+                location.href = "index.html";
+            }
+
+            //登出按鈕監聽 s02_logout_btn 清除value並跳回首頁
+            $("#s02_logout_btn").click(function () {
+                setCookie("UID01", "", 7);
+                setCookie("UID02", "", 7);
+                setCookie("UID03", "", 7);
+                location.href = "index.html";
+            });
+
+            function showdata_check_uid(data) {
+                console.log(data);
+                if (data.state) {
+                    //顯示登入者歡迎資訊
+                    $("#s02_user_text").html('歡迎會員: <span class="h2 fw-900 text-success">' + data.data.Username + '</span>');
+
+                    //顯示登出按鈕
+                    $("#s02_logout_btn").removeClass("d-none");
+                } else {
+                    location.href = "index.html";
+
+                }
+            }
+
+            //from w3c
+            function setCookie(cname, cvalue, exdays) {
+                const d = new Date();
+                d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+                let expires = "expires=" + d.toUTCString();
+                document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+            }
+
+            function getCookie(cname) {
+                let name = cname + "=";
+                let decodedCookie = decodeURIComponent(document.cookie);
+                let ca = decodedCookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+        });
+    </script>
+</body>
+
+</html>

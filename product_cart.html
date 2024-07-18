@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>產品詳情</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/myall.css">
+    <link rel="stylesheet" href="./css/all.min.css">
+    <link rel="stylesheet" href="./css/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .cart-icon {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--mycolor04);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+
+        .cart-icon i {
+            font-size: 24px;
+        }
+
+        #cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translateY(-50%) scale(1);
+            }
+
+            50% {
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            100% {
+                transform: translateY(-50%) scale(1);
+            }
+        }
+
+        .cart {
+            position: fixed;
+            top: 50%;
+            right: -300px;
+            width: 300px;
+            background: #f8f9fa;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-50%);
+            transition: right 0.3s;
+            z-index: 999;
+        }
+
+        .cart.show {
+            right: 0;
+        }
+
+        .pagination .page-link {
+            color: #198754;
+            /* 綠色文字 */
+            border-color: #198754;
+            /* 綠色邊框 */
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #198754;
+            /* 當前頁面的背景為綠色 */
+            border-color: #198754;
+            color: white;
+            /* 當前頁面的文字為白色 */
+        }
+
+        .pagination .page-link:hover {
+            color: white;
+            background-color: #198754;
+            border-color: #198754;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #6c757d;
+            /* 禁用狀態的顏色 */
+            border-color: #dee2e6;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        footer {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <!-- section 01 -->
+        <section style="background-color: var(--mycolor06);" id="topPage">
+            <div class="container">
+                <div class="text-end">
+                    <a href="https://www.facebook.com/" target="_blank" id="FB"><i class="fa-brands fa-square-facebook "
+                            style="color: var(--mycolor01-3);"></i></a>
+                    <a href="https://www.x.com/" target="_blank" id="TW"><i class="fa-brands fa-x-twitter"
+                            style="color: var(--mycolor11-1);"></i></a>
+                </div>
+            </div>
+        </section>
+        <!-- section 02 -->
+        <section>
+            <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+                <!-- 多了bg-dark navbar-dark -->
+                <div class="container">
+                    <!-- 把fluid取消，內容才會在中間 -->
+                    <!-- 小圖示 -->
+                    <a class="navbar-brand"><i class="fa-solid fa-paw wow animate__lightSpeedInLeft"
+                            style="color: var(--mycolor09-3);" data-wow-duration="3s" data-wow-delay="0s"
+                            data-wow-iteration="1"></i></a>
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link " aria-current="page" href="./index.html">首頁</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="./product_cart.html">購買頁面</a>
+                            </li>
+                        </ul>
+                        <!-- 設登入與註冊按鈕 -->
+                        <div>
+                            <button class="btn btn-p-01" data-bs-toggle="modal" data-bs-target="#loginModal">登入</button>
+                            <button class="btn btn-p-03" data-bs-toggle="modal"
+                                data-bs-target="#registerModal">註冊</button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </section>
+
+        <div class="container">
+            <div class="row" id="product-list">
+                <!-- 產品 -->
+            </div>
+            <div id="pagination-container"></div>
+        </div>
+
+        <!-- 購物車詳情 Modal -->
+        <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="productModalLabel">產品詳情</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modal-product-details">
+                        <!-- 產品詳情 -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-outline-success" id="add-to-cart">加入購物車</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cart-icon" class="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span id="cart-count">0</span>
+        </div>
+
+        <div id="cart" class="cart">
+            <h5>購物車</h5>
+            <ul id="cart-items"></ul>
+            <p id="total-price">總價格: $0</p>
+            <button id="checkout" class="btn btn-outline-success">結帳</button>
+            <button id="clear-cart" class="btn btn-outline-danger">清空購物車</button>
+        </div>
+    </main>
+
+
+    <!-- section 12 -->
+    <footer>
+        <section id="s12" style="background-color: var(--mycolor06);">
+            <div class="container wow animate__fadeInRight" data-wow-duration="2s" data-wow-delay="0s"
+                data-wow-iteration="1">
+                <!-- 這樣連結才不會出現在螢幕最左邊 -->
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link disabled">Power By 跨平台班級Pam Kuo製作2024.05</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active s12-link" style="color: var(--mycolor05);" aria-current="page"
+                            href="#">回首頁</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link s12-link" style="color: var(--mycolor05);" href="#FB">Facebook</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link s12-link" style="color: var(--mycolor05);" href="#TW">Twitter</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </footer>
+
+
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(function () {
+            var products = [];
+            var cart = [];
+            var currentPage = 1;
+            var itemsPerPage = getItemsPerPage();
+
+            //initializeCart();
+
+            function initializeCart() {
+                // 從 localStorage 讀取購物車數據
+                cart = JSON.parse(localStorage.getItem('cart')) || [];
+                updateCartDisplay();
+            }
+
+            $(document).ready(function () {
+                initializeCart();
+
+            });
+
+            // 根據螢幕寬度決定每頁顯示的產品數量
+            function getItemsPerPage() {
+                return $(window).width() < 768 ? 3 : 6;
+            }
+
+            function updateCartDisplay() {
+                $("#cart-items").empty();
+                var totalPrice = 0;
+                var totalItems = cart.length;
+
+                cart.forEach(function (item, index) {
+                    var itemTotal = item.price * item.quantity;
+                    totalPrice += itemTotal;
+
+                    var cartItemHTML = '<li>' + item.name + ' x ' + item.quantity + ' - $' + itemTotal.toFixed(2) +
+                        ' <button class="btn btn-sm btn-danger remove-item" data-index="' + index + '">刪除</button>' +
+                        ' <button class="btn btn-sm btn-primary edit-item" data-index="' + index + '">修改</button>' +
+                        '<div class="edit-form" style="display:none;">' +
+                        '<input type="number" class="edit-quantity" value="' + item.quantity + '" min="1">' +
+                        '<button class="btn btn-sm btn-success confirm-edit">確認</button>' +
+                        '<button class="btn btn-sm btn-secondary cancel-edit">取消</button>' +
+                        '</div></li>';
+                    $("#cart-items").append(cartItemHTML);
+                });
+
+                $("#total-price").text("總價格: $" + totalPrice.toFixed(2));
+                $("#cart-count").text(totalItems);
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+
+            // 點擊修改按鈕
+            $(document).on('click', '.edit-item', function () {
+                var index = $(this).data('index');
+                $(this).siblings('.edit-form').show();
+                $(this).hide();
+            });
+
+            // 點擊取消修改
+            $(document).on('click', '.cancel-edit', function () {
+                var editForm = $(this).parent();
+                editForm.hide();
+                editForm.siblings('.edit-item').show();
+            });
+
+            // 點擊確認修改
+            $(document).on('click', '.confirm-edit', function () {
+                var editForm = $(this).parent();
+                var index = editForm.siblings('.edit-item').data('index');
+                var newQuantity = parseInt(editForm.find('.edit-quantity').val());
+
+                if (newQuantity > 0) {
+                    cart[index].quantity = newQuantity;
+                    updateCartDisplay();
+                } else {
+                    alert('數量必須大於0');
+                }
+            });
+
+            // 監聽窗口大小變化
+            $(window).resize(function () {
+                var newItemsPerPage = getItemsPerPage();
+                if (newItemsPerPage !== itemsPerPage) {
+                    itemsPerPage = newItemsPerPage;
+                    showdata(products);
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "http://upupcoffee.infinityfreeapp.com/product_R_api.php",
+                dataType: "json",
+                success: function (data) {
+                    if (data.state) {
+                        products = data.data;
+                        showdata(products);
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("error-product_R_api.php");
+                }
+            });
+
+            function showdata(products) {
+                var startIndex = (currentPage - 1) * itemsPerPage;
+                var endIndex = Math.min(startIndex + itemsPerPage, products.length);
+                $("#product-list").empty();
+
+                for (var i = startIndex; i < endIndex; i++) {
+                    var item = products[i];
+                    var strHTML = '<div class="col-md-4 mb-4"><div class="card"><img src="' + item.Pimg + '" class="card-img-top" alt="" style="width:100%; height:200px; object-fit:cover;"><div class="card-body"><h5 class="card-title">商品名稱：' + item.Pname + '</h5><p class="card-text">商品單價：$' + item.Price + '</p><p class="card-text">商品數量：' + item.Pnum + '</p><p class="card-text">商品備註：' + item.Premark + '</p><button class="btn btn-success view-product" data-id="' + item.ID + '">點我選購</button></div></div>';
+
+                    $("#product-list").append(strHTML);
+
+                    createPagination(products);
+                }
+            }
+
+            function createPagination(products) {
+                var totalPages = Math.ceil(products.length / itemsPerPage);
+                var paginationHTML = '<nav aria-label="Page navigation"><ul class="pagination justify-content-center">';
+                paginationHTML += '<li class="page-item' + (currentPage === 1 ? ' disabled' : '') + '"><a class="page-link" href="#" data-page="prev">前一頁</a></li>';
+
+                for (var i = 1; i <= totalPages; i++) {
+                    paginationHTML += '<li class="page-item' + (i === currentPage ? ' active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+                }
+
+                paginationHTML += '<li class="page-item' + (currentPage === totalPages ? ' disabled' : '') + '"><a class="page-link" href="#" data-page="next">後一頁</a></li>';
+                paginationHTML += '</ul></nav>';
+
+                // 清空並重新填充分頁容器
+                $("#pagination-container").empty().html(paginationHTML);
+
+                // 綁定點擊事件
+                $(".page-link").on("click", function (e) {
+                    e.preventDefault();
+                    var page = $(this).data("page");
+
+                    if (page === "prev" && currentPage > 1) {
+                        currentPage--;
+                    } else if (page === "next" && currentPage < totalPages) {
+                        currentPage++;
+                    } else if (typeof page === "number") {
+                        currentPage = page;
+                    }
+
+                    showdata(products);
+                    createPagination(products);
+                });
+            }
+
+            // 點進去看產品詳情
+            $(document).on("click", ".view-product", function () {
+                var productId = $(this).data("id");
+                var selectedProduct = products.find(function (p) {
+                    return p.ID == productId;
+                });
+
+                var productDetails =
+                    '<img src="' + selectedProduct.Pimg + '" class="img-fluid mb-3" alt="' + selectedProduct.Pname + '">' +
+                    '<h3>' + selectedProduct.Pname + '</h3>' +
+                    '<p>價格: $' + selectedProduct.Price + '</p>' +
+                    '<p>庫存: ' + selectedProduct.Pnum + '</p>' +
+                    '<p>備註: ' + selectedProduct.Premark + '</p>' +
+                    '<div class="form-group">' +
+                    '<label for="quantity">數量:</label>' +
+                    '<input type="number" class="form-control" id="quantity" min="1" max="' + selectedProduct.Pnum + '" value="1">' +
+                    '</div>';
+
+                $("#modal-product-details").html(productDetails);
+
+                $("#productModal").modal("show");
+
+                // 修改這裡，將產品ID綁定到add-to-cart按鈕上
+                $("#add-to-cart").data("id", productId);
+            });
+
+            // 加入購物車
+            $("#add-to-cart").on("click", function () {
+                var productId = $(this).data("id");
+                var quantity = parseInt($("#quantity").val());
+                var product = products.find(p => p.ID == productId);
+
+                var existingItemIndex = cart.findIndex(item => item.id == productId);
+                if (existingItemIndex !== -1) {
+                    cart[existingItemIndex].quantity += quantity;
+                } else {
+                    cart.push({
+                        id: product.ID,
+                        name: product.Pname,
+                        price: parseFloat(product.Price),
+                        quantity: quantity
+                    });
+                }
+
+                updateCartDisplay();
+                $("#productModal").modal("hide");
+            });
+
+            function updateCart() {
+                $("#cart-items").empty();
+                var totalPrice = 0;
+                var totalItems = 0;
+
+                cart.forEach(function (item, index) {
+                    var itemTotal = item.price * item.quantity;
+                    totalPrice += itemTotal;
+                    totalItems += item.quantity;
+
+                    var cartItemHTML = '<li>' + item.name + ' x ' + item.quantity + ' - $' + itemTotal +
+                        ' <button class="btn btn-sm btn-danger remove-item" data-index="' + index + '">移除</button></li>';
+                    $("#cart-items").append(cartItemHTML);
+                });
+
+                $("#total-price").text("總價格: $" + totalPrice.toFixed(2));
+                $("#cart-count").text(totalItems);
+
+                // 更新 localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+
+            $("#clear-cart").on("click", function () {
+                if (confirm("確定要清空購物車嗎?")) {
+                    cart = [];
+                    localStorage.removeItem('cart');
+                    updateCartDisplay();
+                }
+            });
+
+            // 添加移除購物車項目的功能
+            $(document).on('click', '.remove-item', function () {
+                var index = $(this).data('index');
+                cart.splice(index, 1);
+                updateCartDisplay();
+            });
+
+            $("#cart-icon").on("click", function () {
+                $("#cart").toggleClass("show");
+            });
+
+            $("#checkout").on("click", function () {
+                if (cart.length === 0) {
+                    alert("購物車是空的！");
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "http://upupcoffee.infinityfreeapp.com/order_C_api.php",
+                        data: JSON.stringify({ cart: cart }),
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function (response) {
+                            if (response.state) {
+                                alert("訂單已成功提交！");
+                                cart = [];
+                                localStorage.removeItem('cart');
+                                updateCartDisplay();
+                                setTimeout(function () {
+                                    location.reload();
+                                }, 100);
+                            } else {
+                                alert("訂單提交失敗：" + response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("AJAX Error: " + status + "\nError: " + error);
+                            alert("訂單提交失敗，請重試。");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
